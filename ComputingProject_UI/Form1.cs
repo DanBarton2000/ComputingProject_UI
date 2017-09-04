@@ -26,7 +26,6 @@ namespace ComputingProject_UI
             InitializeComponent();
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
             WindowState = FormWindowState.Maximized;
-            update.Interval = 1000; // redundant;
 
             worker = new BackgroundWorker();
             worker.DoWork += worker_DoWork;
@@ -41,13 +40,6 @@ namespace ComputingProject_UI
         private void Form1_Load(object sender, EventArgs e)
         {
 
-        }
-
-        private void update_Tick(object sender, EventArgs e)
-        {
-            //Loop(ObjectManager.allObjects);
-            //Console.WriteLine("LOOP :D");
-            //Invalidate();
         }
 
         private void Forces_Click(object sender, EventArgs e)
@@ -93,14 +85,10 @@ namespace ComputingProject_UI
         {
             base.OnPaint(e);
             // Update graphics
-            // For loop
             foreach (CelestialObject co in ObjectManager.allObjects) {
                 e.Graphics.FillEllipse(Brushes.Red, (float)co.position.x, (float)co.position.y, 100, 100);
             }
             Invalidate();
-            //e.Graphics.FillEllipse(Brushes.Green, x, y, 100, 100);
-            //e.Graphics.FillEllipse(Brushes.Red, 900, 400, 100, 100);
-            //Console.WriteLine("X: " + x + " Y: "+ y);
         }
 
         void worker_DoWork(object sender, DoWorkEventArgs e) {

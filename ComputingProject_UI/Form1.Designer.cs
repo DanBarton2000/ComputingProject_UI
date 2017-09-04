@@ -28,14 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.update = new System.Windows.Forms.Timer(this.components);
             this.Forces = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // update
-            // 
-            this.update.Tick += new System.EventHandler(this.update_Tick);
             // 
             // Forces
             // 
@@ -62,8 +56,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer update;
         private System.Windows.Forms.Label Forces;
     }
 }
