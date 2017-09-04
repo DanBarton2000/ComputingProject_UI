@@ -15,7 +15,7 @@ namespace ComputingProject_UI
     public partial class Form1 : Form
     {
         int milliseconds = 1000/30;
-        double timeStep = 24 * 3600 * 50; // One day
+        double timeStep = 24 * 3600; // One day
         double scale = 250 / Constants.AstronomicalUnit;
 
         double fx, fy;
