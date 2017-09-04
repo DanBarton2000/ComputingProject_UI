@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
+//using System.Windows.Media;
 using ComputingProject;
 
 namespace ComputingProject_UI
@@ -32,9 +33,9 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 700));
-            CelestialObject planet = new CelestialObject("Planet", 1E20, 0, 0, new Vector(500, 200));
-            CelestialObject planet1 = new CelestialObject("Planet1", 1E20, 30, 50, new Vector(100, 600));
+            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 700), Brushes.Red);
+            CelestialObject planet = new CelestialObject("Planet", 1E22, 0, 0, new Vector(500, 200), Brushes.Purple);
+            CelestialObject planet1 = new CelestialObject("Planet1", 1E22, 30, 50, new Vector(100, 600), Brushes.Blue);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -86,7 +87,7 @@ namespace ComputingProject_UI
             base.OnPaint(e);
             // Update graphics
             foreach (CelestialObject co in ObjectManager.allObjects) {
-                e.Graphics.FillEllipse(Brushes.Red, (float)co.position.x, (float)co.position.y, 100, 100);
+                e.Graphics.FillEllipse(co.colour, (float)co.position.x, (float)co.position.y, 100, 100);
             }
             Invalidate();
         }
