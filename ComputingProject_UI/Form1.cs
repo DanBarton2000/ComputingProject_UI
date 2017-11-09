@@ -17,9 +17,8 @@ namespace ComputingProject_UI
     {
         int milliseconds = 1000/30;
         double timeStep = 24 * 3600; // One day
-        double scale = 250 / Constants.AstronomicalUnit;
+        double scale = 100 / Constants.AstronomicalUnit;
 
-        double fx, fy;
         BackgroundWorker worker; // New thread
 
         public Form1()
@@ -28,14 +27,18 @@ namespace ComputingProject_UI
             this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
             WindowState = FormWindowState.Maximized;
 
+            DebugTools.DebugMode = false;
+
             worker = new BackgroundWorker();
             worker.DoWork += worker_DoWork;
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 700), Brushes.Red);
-            CelestialObject planet = new CelestialObject("Planet", 1E22, 0, 0, new Vector(500, 200), Brushes.Purple);
-            CelestialObject planet1 = new CelestialObject("Planet1", 1E22, 30, 50, new Vector(100, 600), Brushes.Blue);
+
+            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 700), Brushes.Red, null);
+            CelestialObject planet = new CelestialObject("Planet", 1E22, 0, 0, new Vector(500, 100), Brushes.Purple, null);
+            CelestialObject planet1 = new CelestialObject("Planet1", 1E21, 30, 50, new Vector(100, 600), Brushes.Blue, null);
+            CelestialObject planet2 = new CelestialObject("Planet2", 1E22, 10, 165, new Vector(1200, 100), Brushes.Green, null);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -48,45 +51,11 @@ namespace ComputingProject_UI
 
         }
 
-        // Needs to be executed on another thread
-        void Loop(List<CelestialObject> objects)
-        {
-            Dictionary<CelestialObject, double[]> forces = new Dictionary<CelestialObject, double[]>();
-            foreach (CelestialObject co in objects)
-            {
-                fx = 0;
-                fy = 0;
-                foreach (CelestialObject cobj in objects)
-                {
-                    if (co != cobj)
-                    {
-                        double[] force = co.Attraction(cobj);
-                        fx += force[0];
-                        fy += force[1];
-                    }
-                }
-                double[] totalForces = new double[2] { fx, fy };
-                forces.Add(co, totalForces);
-            }
-
-            foreach (CelestialObject co in objects)
-            {
-                double[] f = forces[co];
-                double massTimeStep = co.Mass * timeStep;
-                co.velocity.x += f[0] / massTimeStep;
-                co.velocity.y += f[1] / massTimeStep;
-
-                co.position.x += co.velocity.x * timeStep * scale;
-                co.position.y += co.velocity.y * timeStep * scale;
-                Console.WriteLine("OBJ: " + co.Name + " X: " + co.position.x + " Y: " + co.position.y);
-            }
-        }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             // Update graphics
-            foreach (CelestialObject co in ObjectManager.allObjects) {
+            foreach (CelestialObject co in ObjectManager.AllObjects) {
                 e.Graphics.FillEllipse(co.colour, (float)co.position.x, (float)co.position.y, 100, 100);
             }
             Invalidate();
@@ -96,7 +65,7 @@ namespace ComputingProject_UI
             BackgroundWorker bw = (BackgroundWorker)sender;
             while (!bw.CancellationPending) {
                 Stopwatch sw = Stopwatch.StartNew();
-                Loop(ObjectManager.allObjects);
+                ObjectManager.Update(timeStep, scale);
                 sw.Stop();
                 int msec = milliseconds - (int)sw.ElapsedMilliseconds;
                 if (msec < 1)
