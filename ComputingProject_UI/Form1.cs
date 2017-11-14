@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 //using System.Windows.Media;
 using ComputingProject;
+using ComputingProject.Collision;
 
 namespace ComputingProject_UI
 {
@@ -18,6 +19,8 @@ namespace ComputingProject_UI
         int milliseconds = 1000/30;
         double timeStep = 24 * 3600; // One day
         double scale = 100 / Constants.AstronomicalUnit;
+
+        QuadTree<CelestialObject> screen;
 
         BackgroundWorker worker; // New thread
 
@@ -34,11 +37,16 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
+            SetScreenQuadtree();
 
             CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 700), Brushes.Red, null);
             CelestialObject planet = new CelestialObject("Planet", 1E22, 0, 0, new Vector(500, 100), Brushes.Purple, null);
             CelestialObject planet1 = new CelestialObject("Planet1", 1E21, 30, 50, new Vector(100, 600), Brushes.Blue, null);
             CelestialObject planet2 = new CelestialObject("Planet2", 1E22, 10, 165, new Vector(1200, 100), Brushes.Green, null);
+
+            foreach (CelestialObject co in ObjectManager.AllObjects) {
+                screen.Insert(co);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -72,6 +80,15 @@ namespace ComputingProject_UI
                     msec = 1;
                 System.Threading.Thread.Sleep(msec);
             }
+        }
+
+        void SetScreenQuadtree() {
+            double screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            double screenHeight = Screen.PrimaryScreen.Bounds.Height;
+
+            Vector centre = new Vector(screenWidth, screenHeight);
+
+            screen = new QuadTree<CelestialObject>(new AABB(centre, centre));
         }
     }
 }
