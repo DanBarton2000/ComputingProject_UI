@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
-//using System.Windows.Media;
 using ComputingProject;
 using ComputingProject.Collision;
 
@@ -43,16 +42,18 @@ namespace ComputingProject_UI
 
             timeController = new TimeController(timeStep);
 
+            // Calculate the maximum screen size
+            ScreenBounds();
+            // Then send that information to the object manager
+            ObjectManager.SetScreenBounds(new Vector(screenWidth, screenHeight));
+
             worker = new BackgroundWorker();
             worker.DoWork += worker_DoWork;
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
             DebugTools.DebugMode = false;
-
-            ScreenBounds();
-
-            ObjectManager.SetScreenBounds(new Vector(screenWidth, screenHeight));
+            DebugTools.UseCollision = false;
 
             AddObjects();
 
@@ -63,11 +64,6 @@ namespace ComputingProject_UI
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Forces_Click(object sender, EventArgs e)
         {
 
         }
@@ -114,7 +110,8 @@ namespace ComputingProject_UI
         }
 
         void AddObjects() {
-            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 0), Brushes.Red, new CircleCollider(new Vector(1, 1), objectRadius));
+            // Celestial Object (Name, Mass, Velocity, Bearing, Position, Colour, Collider, Radius)
+            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 180, new Vector(1000, 0), Brushes.Red, new CircleCollider(new Vector(1, 1), objectRadius));
             CelestialObject planet = new CelestialObject("Planet", 1E22, -50, 60, new Vector(500, 700), Brushes.Purple, new CircleCollider(new Vector(1, 1), objectRadius));
             CelestialObject planet1 = new CelestialObject("Planet1", 1E22, 100, 360, new Vector(100, 600), Brushes.Blue, new CircleCollider(new Vector(1, 1), objectRadius));
             CelestialObject planet2 = new CelestialObject("Planet2", 1E22, 10, 300, new Vector(100, 100), Brushes.Green, new CircleCollider(new Vector(1, 1), objectRadius));
