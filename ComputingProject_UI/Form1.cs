@@ -25,7 +25,7 @@ namespace ComputingProject_UI
         double screenWidthHalf;
         double screenHeightHalf;
 
-        double objectRadius = 100;
+        double objectRadius = 10;
 
         BackgroundWorker worker; // New thread
 
@@ -53,7 +53,8 @@ namespace ComputingProject_UI
             worker.RunWorkerAsync();
 
             DebugTools.DebugMode = false;
-            DebugTools.UseCollision = false;
+            DebugTools.UseCollision = true;
+            DebugTools.DrawVelocityArrows = true;
 
             AddObjects();
 
@@ -73,8 +74,27 @@ namespace ComputingProject_UI
             base.OnPaint(e);
             // Update graphics
             foreach (IQuadtreeObject co in ObjectManager.AllObjects) {
-                e.Graphics.FillEllipse(co.colour, (float)co.position.x, (float)co.position.y, (float)objectRadius, (float)objectRadius);
+                e.Graphics.FillEllipse(co.colour, (float)(co.position.x + objectRadius), (float)(co.position.y + objectRadius), (float)objectRadius * 2, (float)objectRadius * 2);
             }
+
+            if (DebugTools.DrawVelocityArrows) {
+                foreach (IQuadtreeObject co in ObjectManager.AllObjects) {
+                    Pen pen = new Pen(Color.Black);
+
+                    double angle = Math.Atan2(co.velocity.y, co.velocity.x); ;
+                    double length = 100;
+
+                    Point startingPoint = new Point((int)(co.position.x + objectRadius), (int)(co.position.y + objectRadius));
+                    Point endingPoint = new Point((int)(co.position.x + objectRadius + Math.Cos(angle) * length), (int)(co.position.y + objectRadius + Math.Sin(angle) * length));
+
+                    if (DebugTools.DebugMode) {
+                        Console.WriteLine(startingPoint.ToString() + " " + endingPoint.ToString());
+                    }
+
+                    e.Graphics.DrawLine(pen, startingPoint, endingPoint);
+                }
+            }
+
             Invalidate();
         }
 
@@ -84,7 +104,7 @@ namespace ComputingProject_UI
                 Stopwatch sw = Stopwatch.StartNew();
 
                 // Update positions of objects
-                ObjectManager.Update(timeController.currentTimeStep, scale, screen, -1);
+                ObjectManager.Update(timeController.currentTimeStep, scale, screen, -0.75);
                 sw.Stop();
                 int msec = milliseconds - (int)sw.ElapsedMilliseconds;
                 if (msec < 1)
@@ -111,8 +131,8 @@ namespace ComputingProject_UI
 
         void AddObjects() {
             // Celestial Object (Name, Mass, Velocity, Bearing, Position, Colour, Collider, Radius)
-            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 180, new Vector(1000, 0), Brushes.Red, new CircleCollider(new Vector(1, 1), objectRadius));
-            CelestialObject planet = new CelestialObject("Planet", 1E22, -50, 60, new Vector(500, 700), Brushes.Purple, new CircleCollider(new Vector(1, 1), objectRadius));
+            CelestialObject moon = new CelestialObject("Moon", 1.5E20, 10, 180, new Vector(1000, 0), Brushes.Red, new CircleCollider(new Vector(1, 1), objectRadius));
+            CelestialObject planet = new CelestialObject("Planet", 1E18, -50, 60, new Vector(500, 700), Brushes.Purple, new CircleCollider(new Vector(1, 1), objectRadius));
             CelestialObject planet1 = new CelestialObject("Planet1", 1E22, 100, 360, new Vector(100, 600), Brushes.Blue, new CircleCollider(new Vector(1, 1), objectRadius));
             CelestialObject planet2 = new CelestialObject("Planet2", 1E22, 10, 300, new Vector(100, 100), Brushes.Green, new CircleCollider(new Vector(1, 1), objectRadius));
             //CelestialObject planet3 = new CelestialObject("Planet3", 1.5E19, 0, 0, new Vector(100, 1000), Brushes.Green, new CircleCollider(new Vector(1, 1), objectRadius));
