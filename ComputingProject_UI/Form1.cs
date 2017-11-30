@@ -19,14 +19,6 @@ namespace ComputingProject_UI
         double timeStep = 24 * 3600 * 100; // One day
         double scale = 250 / Constants.AstronomicalUnit;
 
-        double screenWidth;
-        double screenHeight;
-
-        double screenWidthHalf;
-        double screenHeightHalf;
-
-        double objectRadius = 10;
-
         BackgroundWorker worker; // New thread
 
         TimeController timeController;
@@ -52,16 +44,11 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-            DebugTools.DebugMode = false;
-            DebugTools.UseCollision = true;
-            DebugTools.DrawVelocityArrows = true;
 
-            AddObjects();
-
-            // Add all objects at the start of the simualtion to the quadtree.
-            foreach (CelestialObject obj in ObjectManager.AllObjects) {
-                screen.Insert(obj);
-            }
+            CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 700), Brushes.Red, null);
+            CelestialObject planet = new CelestialObject("Planet", 1E22, 0, 0, new Vector(500, 100), Brushes.Purple, null);
+            CelestialObject planet1 = new CelestialObject("Planet1", 1E21, 30, 50, new Vector(100, 600), Brushes.Blue, null);
+            CelestialObject planet2 = new CelestialObject("Planet2", 1E22, 10, 165, new Vector(1200, 100), Brushes.Green, null);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -111,33 +98,6 @@ namespace ComputingProject_UI
                     msec = 1;
                 System.Threading.Thread.Sleep(msec);
             }
-        }
-
-        /// <summary>
-        /// Calculate the bounds of the screen and then set the main Quadtree to the size of the screen
-        /// </summary>
-        void ScreenBounds() {
-            screenHeight = Screen.PrimaryScreen.Bounds.Height;
-            screenWidth = Screen.PrimaryScreen.Bounds.Width;
-
-            screenWidthHalf = screenWidth / 2;
-            screenHeightHalf = screenHeight / 2;
-
-            centre = new Vector(screenWidthHalf, screenHeightHalf);
-
-            screen = new QuadTree<IQuadtreeObject>(new AABB(centre, centre));
-            Console.WriteLine("Screen set!");
-        }
-
-        void AddObjects() {
-            // Celestial Object (Name, Mass, Velocity, Bearing, Position, Colour, Collider, Radius)
-            CelestialObject moon = new CelestialObject("Moon", 1.5E20, 10, 180, new Vector(1000, 0), Brushes.Red, new CircleCollider(new Vector(1, 1), objectRadius));
-            CelestialObject planet = new CelestialObject("Planet", 1E18, -50, 60, new Vector(500, 700), Brushes.Purple, new CircleCollider(new Vector(1, 1), objectRadius));
-            CelestialObject planet1 = new CelestialObject("Planet1", 1E22, 100, 360, new Vector(100, 600), Brushes.Blue, new CircleCollider(new Vector(1, 1), objectRadius));
-            CelestialObject planet2 = new CelestialObject("Planet2", 1E22, 10, 300, new Vector(100, 100), Brushes.Green, new CircleCollider(new Vector(1, 1), objectRadius));
-            //CelestialObject planet3 = new CelestialObject("Planet3", 1.5E19, 0, 0, new Vector(100, 1000), Brushes.Green, new CircleCollider(new Vector(1, 1), objectRadius));
-            //CelestialObject planet4 = new CelestialObject("Planet4", 1.5E19, 0, 300, new Vector(200, 70), Brushes.Green, new CircleCollider(new Vector(1, 1), objectRadius));
-            //CelestialObject planet5 = new CelestialObject("Planet5", 1.5E15, 10, 300, new Vector(500, 200), Brushes.Green, new CircleCollider(new Vector(1, 1), objectRadius));
         }
     }
 }
