@@ -28,35 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Forces = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // Forces
-            // 
-            this.Forces.AutoSize = true;
-            this.Forces.Location = new System.Drawing.Point(548, 13);
-            this.Forces.Name = "Forces";
-            this.Forces.Size = new System.Drawing.Size(35, 13);
-            this.Forces.TabIndex = 0;
-            this.Forces.Text = "label1";
-            this.Forces.Click += new System.EventHandler(this.Forces_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(705, 579);
-            this.Controls.Add(this.Forces);
             this.Name = "Form1";
             this.Text = "MainCanvas";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Label Forces;
     }
 }
 
