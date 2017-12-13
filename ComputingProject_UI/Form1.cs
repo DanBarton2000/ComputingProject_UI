@@ -20,6 +20,7 @@ namespace ComputingProject_UI
         double timeStep = 24 * 3600; // One day
         double scale = 100 / Constants.AstronomicalUnit;
 
+        // Quadtree might need to be celetial object only
         QuadTree<CelestialObject> screen;
 
         BackgroundWorker worker; // New thread
@@ -27,7 +28,7 @@ namespace ComputingProject_UI
         public Form1()
         {
             InitializeComponent();
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
             WindowState = FormWindowState.Maximized;
 
             DebugTools.DebugMode = false;
