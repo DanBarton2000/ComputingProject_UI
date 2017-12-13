@@ -59,8 +59,8 @@ namespace ComputingProject_UI
 
             DebugTools.DebugMode = true;
             DebugTools.UseCollision = true;
-            DebugTools.DrawVelocityArrows = true;
-            DebugTools.PrintCollisionVelocities = true;
+            DebugTools.DrawVelocityArrows = false;
+            DebugTools.PrintCollisionVelocities = false;
 
             AddObjects();
             
@@ -80,7 +80,7 @@ namespace ComputingProject_UI
             base.OnPaint(e);
             // Update graphics
             foreach (IQuadtreeObject co in ObjectManager.AllObjects) {
-                e.Graphics.FillEllipse(co.colour, (float)(co.position.x + objectRadius), (float)(co.position.y + objectRadius), (float)objectRadius * 2, (float)objectRadius * 2);
+                e.Graphics.FillEllipse(co.colour, (float)((co.position.x + objectRadius) * scale + screenWidthHalf), (float)((co.position.y + objectRadius) * scale + screenHeightHalf), (float)objectRadius * 2, (float)objectRadius * 2);
             }
 
             if (DebugTools.DrawVelocityArrows) {
@@ -138,6 +138,8 @@ namespace ComputingProject_UI
         void AddObjects() {
 
             Vector centre = new Vector(screenWidthHalf, screenHeightHalf);
+
+            Console.WriteLine(centre.ToString());
 
             CircleCollider cc = new CircleCollider(new Vector(), objectRadius);
 
