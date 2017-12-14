@@ -56,11 +56,7 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-
-            DebugTools.DebugMode = true;
-            DebugTools.UseCollision = true;
-            DebugTools.DrawVelocityArrows = false;
-            DebugTools.PrintCollisionVelocities = false;
+            SetDebugTools(true, true, false, true);
 
             AddObjects();
             
@@ -136,6 +132,20 @@ namespace ComputingProject_UI
         }
 
         /// <summary>
+        /// What Debug Tools to use
+        /// </summary>
+        /// <param name="mode"></param>
+        /// <param name="velocityArrows"></param>
+        /// <param name="collisionVelocities"></param>
+        /// <param name="useCollision"></param>
+        void SetDebugTools(bool mode, bool velocityArrows, bool collisionVelocities, bool useCollision) {
+            DebugTools.DebugMode = mode;
+            DebugTools.DrawVelocityArrows = velocityArrows;
+            DebugTools.PrintCollisionVelocities = collisionVelocities;
+            DebugTools.UseCollision = useCollision;
+        }
+
+        /// <summary>
         /// Adds objects to the screen at the start
         /// </summary>
         void AddObjects() {
@@ -150,5 +160,6 @@ namespace ComputingProject_UI
             CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector(0, 29.783 * 1000), new Vector(centre.x + Constants.AstronomicalUnit * -1, centre.y), Brushes.Green, cc);
             CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector(-35 * 1000, 0), new Vector(centre.x, centre.y + (Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
         }
+
     }
 }
