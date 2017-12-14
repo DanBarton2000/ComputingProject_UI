@@ -16,8 +16,11 @@ namespace ComputingProject_UI
     public partial class Form1 : Form
     {
         int milliseconds = 1000/30;
-        double timeStep = 24 * 3600 * 100; // One day
+        double timeStep = 24 * 3600; // One day
         double scale = 250 / Constants.AstronomicalUnit;
+
+        // Quadtree might need to be celetial object only
+        QuadTree<IQuadtreeObject> screen;
 
         double screenWidth;
         double screenHeight;
@@ -25,14 +28,13 @@ namespace ComputingProject_UI
         double screenWidthHalf;
         double screenHeightHalf;
 
-        double objectRadius;
+        double objectRadius = 50;
 
         BackgroundWorker worker; // New thread
 
         TimeController timeController;
 
         Vector centre;
-        QuadTree<IQuadtreeObject> screen;
 
         public Form1()
         {
@@ -54,7 +56,11 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-            SetDebugTools();
+
+            DebugTools.DebugMode = true;
+            DebugTools.UseCollision = true;
+            DebugTools.DrawVelocityArrows = false;
+            DebugTools.PrintCollisionVelocities = false;
 
             AddObjects();
             
@@ -74,7 +80,7 @@ namespace ComputingProject_UI
             base.OnPaint(e);
             // Update graphics
             foreach (IQuadtreeObject co in ObjectManager.AllObjects) {
-                e.Graphics.FillEllipse(co.colour, (float)(co.position.x + objectRadius), (float)(co.position.y + objectRadius), (float)objectRadius * 2, (float)objectRadius * 2);
+                e.Graphics.FillEllipse(co.colour, (float)((co.position.x + objectRadius) * scale + screenWidthHalf), (float)((co.position.y + objectRadius) * scale + screenHeightHalf), (float)objectRadius * 2, (float)objectRadius * 2);
             }
 
             if (DebugTools.DrawVelocityArrows) {
@@ -88,7 +94,7 @@ namespace ComputingProject_UI
                     Point endingPoint = new Point((int)(co.position.x + objectRadius + Math.Cos(angle) * Math.Sqrt(Math.Pow(co.velocity.x, 2) + (Math.Pow(co.velocity.y, 2)))), (int)(co.position.y + objectRadius + Math.Sin(angle) * length));
 
                     if (DebugTools.DebugMode) {
-                        Console.WriteLine("Form1 - Velocity Arrows - Starting Point: " + startingPoint.ToString() + " Ending Point: " + endingPoint.ToString());
+                        Console.WriteLine(startingPoint.ToString() + " " + endingPoint.ToString());
                     }
 
                     e.Graphics.DrawLine(pen, startingPoint, endingPoint);
@@ -104,7 +110,7 @@ namespace ComputingProject_UI
                 Stopwatch sw = Stopwatch.StartNew();
 
                 // Update positions of objects
-                ObjectManager.Update(timeController.currentTimeStep, scale, screen, -1);
+                ObjectManager.Update(timeController.currentTimeStep, scale, screen, -0.75);
                 sw.Stop();
                 int msec = milliseconds - (int)sw.ElapsedMilliseconds;
                 if (msec < 1)
@@ -130,18 +136,16 @@ namespace ComputingProject_UI
         }
 
         void AddObjects() {
-            //CelestialObject moon = new CelestialObject("Moon", 1.5E21, 10, 20, new Vector(1000, 700), Brushes.Red, new CircleCollider(new Vector(), objectRadius));
-            //CelestialObject planet = new CelestialObject("Planet", 1E21, 40, 78, new Vector(500, 100), Brushes.Purple, new CircleCollider(new Vector(), objectRadius));
-            //CelestialObject planet1 = new CelestialObject("Planet1", 1E21, 30, 50, new Vector(100, 600), Brushes.Blue, new CircleCollider(new Vector(), objectRadius));
-            CelestialObject planet2 = new CelestialObject("Planet2", 1E21, -10, 0, new Vector(600, 600), Brushes.Green, new CircleCollider(new Vector(), objectRadius));
-            CelestialObject planet3 = new CelestialObject("Planet3", 1E21, 10, 0, new Vector(100, 600), Brushes.Purple, new CircleCollider(new Vector(), objectRadius));
-        }
 
-        void SetDebugTools() {
-            DebugTools.DebugMode = true;
-            DebugTools.UseCollision = false;
-            DebugTools.DrawVelocityArrows = true;
-            DebugTools.PrintCollisionVelocities = true;
+            Vector centre = new Vector(screenWidthHalf, screenHeightHalf);
+
+            Console.WriteLine(centre.ToString());
+
+            CircleCollider cc = new CircleCollider(new Vector(), objectRadius);
+
+            CelestialObject sun = new CelestialObject("Sun", 2E30, new Vector(0, 0), centre, Brushes.Red, cc);
+            CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector(0, 29.783 * 1000), new Vector(centre.x + Constants.AstronomicalUnit * -1, centre.y), Brushes.Green, cc);
+            CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector(-35 * 1000, 0), new Vector(centre.x, centre.y + (Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
         }
     }
 }
