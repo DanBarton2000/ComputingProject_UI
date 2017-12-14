@@ -56,14 +56,11 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-            SetDebugTools(true, true, false, true);
+            SetDebugTools(true, false, false, false);
 
+            // Add the objects to the simulation
             AddObjects();
             
-            // Add all objects at the start of the simualtion to the quadtree.
-            foreach (CelestialObject obj in ObjectManager.AllObjects) {
-                screen.Insert(obj);
-            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -86,8 +83,9 @@ namespace ComputingProject_UI
                     double angle = Math.Atan2(co.velocity.y, co.velocity.x); ;
                     double length = 100;
 
-                    Point startingPoint = new Point((int)(co.position.x + objectRadius), (int)(co.position.y + objectRadius));
-                    Point endingPoint = new Point((int)(co.position.x + objectRadius + Math.Cos(angle) * Math.Sqrt(Math.Pow(co.velocity.x, 2) + (Math.Pow(co.velocity.y, 2)))), (int)(co.position.y + objectRadius + Math.Sin(angle) * length));
+                    Point startingPoint = new Point((int)((co.position.x + objectRadius) * scale), (int)((co.position.y + objectRadius) * scale));
+                    Point endingPoint = new Point((int)((co.position.x + objectRadius + Math.Cos(angle) * Math.Sqrt(Math.Pow(co.velocity.x, 2) + (Math.Pow(co.velocity.y, 2)))) * scale), 
+                                                  (int)((co.position.y + objectRadius + Math.Sin(angle) * length) * scale));
 
                     if (DebugTools.DebugMode) {
                         Console.WriteLine(startingPoint.ToString() + " " + endingPoint.ToString());
@@ -102,11 +100,19 @@ namespace ComputingProject_UI
 
         void worker_DoWork(object sender, DoWorkEventArgs e) {
             BackgroundWorker bw = (BackgroundWorker)sender;
+
+            int frame = 0;
+
             while (!bw.CancellationPending) {
                 Stopwatch sw = Stopwatch.StartNew();
 
                 // Update positions of objects
-                ObjectManager.Update(timeController.currentTimeStep, scale, screen, -0.75);
+                ObjectManager.Update(timeController.currentTimeStep, scale, screen, -1);
+
+                frame += 1;
+
+                Console.WriteLine("Frame: " + frame);
+
                 sw.Stop();
                 int msec = milliseconds - (int)sw.ElapsedMilliseconds;
                 if (msec < 1)
@@ -157,8 +163,8 @@ namespace ComputingProject_UI
             CircleCollider cc = new CircleCollider(new Vector(), objectRadius);
 
             CelestialObject sun   = new CelestialObject("Sun", 2E30, new Vector(0, 0), centre, Brushes.Red, cc);
-            CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector(0, 29.783 * 1000), new Vector(centre.x + Constants.AstronomicalUnit * -1, centre.y), Brushes.Green, cc);
-            CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector(-35 * 1000, 0), new Vector(centre.x, centre.y + (Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
+            CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector(0, 29.783 * 1000), new Vector(centre.x + 250 * -1, centre.y), Brushes.Green, cc);
+            CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector(-35 * 1000, 0), new Vector(centre.x, centre.y + (250 * 0.723)), Brushes.Blue, cc);
         }
 
     }
