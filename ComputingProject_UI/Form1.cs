@@ -17,7 +17,7 @@ namespace ComputingProject_UI
     {
         int milliseconds = 1000/30; // 30 frames per second
         double timeStep = 24 * 3600; // One day
-        double scale = 100 / Constants.AstronomicalUnit; // Scale the simulation down so that it can fit on the screen
+        double scale = 250 / Constants.AstronomicalUnit; // Scale the simulation down so that it can fit on the screen
 
         // Quadtree might need to be celetial object only
         QuadTree<IQuadtreeObject> screen;
@@ -57,7 +57,7 @@ namespace ComputingProject_UI
             worker.RunWorkerAsync();
 
             // Set whether to use the debug tools 
-            SetDebugTools(true, false, false, false);
+            SetDebugTools(true, false, false, true);
 
             // Add the objects to the simulation
             AddObjects();
@@ -77,21 +77,32 @@ namespace ComputingProject_UI
                 e.Graphics.FillEllipse(co.colour, (float)((co.position.x + objectRadius) * scale + screenWidthHalf), (float)((co.position.y + objectRadius) * scale + screenHeightHalf), (float)objectRadius * 2, (float)objectRadius * 2);
             }
 
+            // Draw the velocity arrows
             if (DebugTools.DrawVelocityArrows) {
                 foreach (IQuadtreeObject co in ObjectManager.AllObjects) {
                     Pen pen = new Pen(Color.Black);
 
-                    double angle = Math.Atan2(co.velocity.y, co.velocity.x); ;
+                    // Work out the angle between the x and y components of the velocity
+                    double angle = Math.Atan2(co.velocity.y, co.velocity.x); 
+
+                    // Hard coded length (should be relative to the size of the velocity)
                     double length = 100;
 
-                    Point startingPoint = new Point((int)((co.position.x + objectRadius) * scale), (int)((co.position.y + objectRadius) * scale));
-                    Point endingPoint = new Point((int)((co.position.x + objectRadius + Math.Cos(angle) * Math.Sqrt(Math.Pow(co.velocity.x, 2) + (Math.Pow(co.velocity.y, 2)))) * scale), 
-                                                  (int)((co.position.y + objectRadius + Math.Sin(angle) * length) * scale));
+                    Vector pos = co.position;
 
+                    pos.Set((co.position.x + objectRadius) * scale + screenWidthHalf, (co.position.y + objectRadius) * scale + screenHeightHalf);
+
+                    // Calculate the starting and ending points of the line
+                    Point startingPoint = new Point((int)((pos.x + objectRadius) * scale), (int)((pos.y + objectRadius) * scale));
+                    Point endingPoint = new Point((int)((pos.x + objectRadius + Math.Cos(angle) * Math.Sqrt(Math.Pow(pos.x, 2) + (Math.Pow(pos.y, 2)))) * scale), 
+                                                  (int)((pos.y + objectRadius + Math.Sin(angle) * length) * scale));
+
+                    // Print the starting and ending coordinates
                     if (DebugTools.DebugMode) {
-                        Console.WriteLine(startingPoint.ToString() + " " + endingPoint.ToString());
+                        Console.WriteLine("Starting Point: " + startingPoint.ToString() + " Ending Point:" + endingPoint.ToString());
                     }
 
+                    // Draw the line
                     e.Graphics.DrawLine(pen, startingPoint, endingPoint);
                 }
             }
@@ -126,6 +137,7 @@ namespace ComputingProject_UI
         /// Calculate the bounds of the screen and then set the main Quadtree to the size of the screen      
         /// </summary>
         void ScreenBounds() {
+            // Get the screen size
             screenHeight = Screen.PrimaryScreen.Bounds.Height;
             screenWidth = Screen.PrimaryScreen.Bounds.Width;
             
@@ -171,8 +183,8 @@ namespace ComputingProject_UI
             */
             ///*
             CelestialObject sun   = new CelestialObject("Sun", 2E30, new Vector(0, 0), centre, Brushes.Red, cc);
-            CelestialObject earth = new CelestialObject("Earth", 6E24, /*new Vector(0, 29.783 * 1000)*/ new Vector(10000, 10000), new Vector(Constants.AstronomicalUnit * -1, 0), Brushes.Green, cc);
-            CelestialObject venus = new CelestialObject("Venus", 4.8E24, /*new Vector(-35 * 1000, 0)*/new Vector(10000, 10000), new Vector(0,(Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
+            CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector(0, 29.783 * 1000), new Vector(Constants.AstronomicalUnit * -1, 0), Brushes.Green, cc);
+            CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector(-35 * 1000, 0), new Vector(0,(Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
             //*/
         }
 
