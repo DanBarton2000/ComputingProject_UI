@@ -16,8 +16,8 @@ namespace ComputingProject_UI
     public partial class Form1 : Form
     {
         int milliseconds = 1000/30; // 30 frames per second
-        double timeStep = 24 * 3600 * 1000; // One day
-        double scale = 250 / Constants.AstronomicalUnit; // Scale the simulation down so that it can fit on the screen
+        double timeStep = 24 * 3600; // One day
+        double scale = 100 / Constants.AstronomicalUnit; // Scale the simulation down so that it can fit on the screen
 
         // Quadtree might need to be celetial object only
         QuadTree<IQuadtreeObject> screen;
@@ -56,7 +56,7 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-            SetDebugTools(true, false, false, false);
+            SetDebugTools(false, false, false, false);
 
             // Add the objects to the simulation
             AddObjects();
@@ -107,7 +107,7 @@ namespace ComputingProject_UI
                 Stopwatch sw = Stopwatch.StartNew();
 
                 // Update positions of objects
-                ObjectManager.Update(timeController.currentTimeStep, scale, screen, -1);
+                ObjectManager.Update(timeController.currentTimeStep, scale, screen, 1);
 
                 frame += 1;
 
@@ -162,16 +162,25 @@ namespace ComputingProject_UI
 
             CircleCollider cc = new CircleCollider(new Vector(), objectRadius);
 
-            CelestialObject sun = new CelestialObject("Sun", 2E30, new Vector(0, 0), new Vector(), Brushes.Red, cc);
-            CelestialObject sun1 = new CelestialObject("Sun", 2E30, new Vector(0, 0), new Vector(Constants.AstronomicalUnit, 0), Brushes.Red, cc);
-            CelestialObject sun2 = new CelestialObject("Sun", 2E30, new Vector(0, 0), new Vector(0, Constants.AstronomicalUnit), Brushes.Red, cc);
-
+            // CelestialObject(name, mass, velocity, position, colour, collider)
             /*
-            CelestialObject sun   = new CelestialObject("Sun", 2E30, new Vector(0, 0), centre, Brushes.Red, cc);
-            CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector(0, 29.783 * 1000), new Vector(Constants.AstronomicalUnit * -1, 0), Brushes.Green, cc);
-            CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector(-35 * 1000, 0), new Vector(0,(Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
+            CelestialObject sun = new CelestialObject("Sun", 2E30, new Vector(0, 0), new Vector(), Brushes.Red, cc);
+            CelestialObject sun1 = new CelestialObject("Sun1", 2E30, new Vector(0, 0), new Vector(Constants.AstronomicalUnit, 0), Brushes.Red, cc);
+            CelestialObject sun2 = new CelestialObject("Sun2", 2E30, new Vector(0, 0), new Vector(0, Constants.AstronomicalUnit), Brushes.Red, cc);
             */
+            ///*
+            CelestialObject sun   = new CelestialObject("Sun", 2E30, new Vector(0, 0), centre, Brushes.Red, cc);
+            CelestialObject earth = new CelestialObject("Earth", 6E24, /*new Vector(0, 29.783 * 1000)*/ new Vector(10000, 10000), new Vector(Constants.AstronomicalUnit * -1, 0), Brushes.Green, cc);
+            CelestialObject venus = new CelestialObject("Venus", 4.8E24, /*new Vector(-35 * 1000, 0)*/new Vector(10000, 10000), new Vector(0,(Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
+            //*/
         }
 
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e) {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e) {
+
+        }
     }
 }
