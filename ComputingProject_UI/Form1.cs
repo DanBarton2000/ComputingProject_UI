@@ -56,7 +56,8 @@ namespace ComputingProject_UI
             worker.WorkerSupportsCancellation = true;
             worker.RunWorkerAsync();
 
-            SetDebugTools(false, false, false, false);
+            // Set whether to use the debug tools 
+            SetDebugTools(true, false, false, false);
 
             // Add the objects to the simulation
             AddObjects();
@@ -140,10 +141,10 @@ namespace ComputingProject_UI
         /// <summary>
         /// What Debug Tools to use
         /// </summary>
-        /// <param name="mode"></param>
-        /// <param name="velocityArrows"></param>
-        /// <param name="collisionVelocities"></param>
-        /// <param name="useCollision"></param>
+        /// <param name="mode">Mode writes the majority of the debug information to the console</param>
+        /// <param name="velocityArrows">Draws the velocity arrows on screen</param>
+        /// <param name="collisionVelocities">Output the velocities after collision</param>
+        /// <param name="useCollision">Use the collision system</param>
         void SetDebugTools(bool mode, bool velocityArrows, bool collisionVelocities, bool useCollision) {
             DebugTools.DebugMode = mode;
             DebugTools.DrawVelocityArrows = velocityArrows;
@@ -179,7 +180,7 @@ namespace ComputingProject_UI
 
         }
 
-        private void label1_Click(object sender, EventArgs e) {
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
 
         }
     }
