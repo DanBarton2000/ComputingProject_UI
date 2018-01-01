@@ -63,7 +63,7 @@
   <ItemGroup>
     <Reference Include="ComputingProject, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ComputingProject\ComputingProject\bin\Debug\ComputingProject.dll</HintPath>
+      <HintPath>..\..\Computing Project Library\ComputingProject\bin\Debug\ComputingProject.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
