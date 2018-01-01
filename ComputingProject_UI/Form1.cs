@@ -34,7 +34,7 @@ namespace ComputingProject_UI
 
         TimeController timeController;
 
-        Vector centre;
+        Vector2 centre;
 
         public Form1()
         {
@@ -49,7 +49,7 @@ namespace ComputingProject_UI
             // Calculate the maximum screen size
             ScreenBounds();
             // Then send that information to the object manager
-            ObjectManager.SetScreenBounds(new Vector(screenWidth, screenHeight));
+            ObjectManager.SetScreenBounds(new Vector2(screenWidth, screenHeight));
 
             worker = new BackgroundWorker();
             worker.DoWork += worker_DoWork;
@@ -129,7 +129,7 @@ namespace ComputingProject_UI
             screenWidthHalf = screenWidth / 2;
             screenHeightHalf = screenHeight / 2;
             
-            centre = new Vector(screenWidthHalf, screenHeightHalf);
+            centre = new Vector2(screenWidthHalf, screenHeightHalf);
             
             screen = new QuadTree<IQuadtreeObject>(new AABB(centre, centre));
             Console.WriteLine("Screen set!");
@@ -137,15 +137,15 @@ namespace ComputingProject_UI
 
         void AddObjects() {
 
-            Vector centre = new Vector(screenWidthHalf, screenHeightHalf);
+            Vector2 centre = new Vector2(screenWidthHalf, screenHeightHalf);
 
             Console.WriteLine(centre.ToString());
 
-            CircleCollider cc = new CircleCollider(new Vector(), objectRadius);
+            CircleCollider cc = new CircleCollider(new Vector2(), objectRadius);
 
-            CelestialObject sun = new CelestialObject("Sun", 2E30, new Vector(0, 0), centre, Brushes.Red, cc);
-            CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector(0, 29.783 * 1000), new Vector(centre.x + Constants.AstronomicalUnit * -1, centre.y), Brushes.Green, cc);
-            CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector(-35 * 1000, 0), new Vector(centre.x, centre.y + (Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
+            CelestialObject sun = new CelestialObject("Sun", 2E30, new Vector2(0, 0), centre, Brushes.Red, cc);
+            CelestialObject earth = new CelestialObject("Earth", 6E24, new Vector2(0, 29.783 * 1000), new Vector2(centre.x + Constants.AstronomicalUnit * -1, centre.y), Brushes.Green, cc);
+            CelestialObject venus = new CelestialObject("Venus", 4.8E24, new Vector2(-35 * 1000, 0), new Vector2(centre.x, centre.y + (Constants.AstronomicalUnit * 0.723)), Brushes.Blue, cc);
         }
     }
 }
